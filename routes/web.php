@@ -27,8 +27,6 @@ Route::resource('thread', ThreadController::class)->only([
     'index', 'store', 'destroy'
 ]);
 
-Route::post('/thread/search', [ThreadController::class, 'search'])->name('thread.search');
-
 Route::resource('/reply', ReplyController::class)->only([
     'store'
 ]);
