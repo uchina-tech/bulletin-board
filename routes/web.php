@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ReplyController;
 use App\Http\Controllers\ThreadController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -15,9 +16,22 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::redirect('/', '/thread')->name('home');
+Route::get('/', function () {
+    return view('welcome');
+});
 
-Route::resource('thread', ThreadController::class)->only(['index']);
+
+//Route::redirect('/', '/thread')->name('home');
+
+Route::resource('thread', ThreadController::class)->only([
+    'index', 'store', 'destroy'
+]);
+
+Route::post('/thread/search', [ThreadController::class, 'search'])->name('thread.search');
+
+Route::resource('/reply', ReplyController::class)->only([
+    'store'
+]);
 
 
 Auth::routes();

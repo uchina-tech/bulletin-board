@@ -17,6 +17,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @var string
      */
+    public const thread = '/thread';
     public const HOME = '/home';
 
     /**

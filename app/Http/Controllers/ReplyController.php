@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Reply;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 
 class ReplyController extends Controller
@@ -13,6 +14,6 @@ class ReplyController extends Controller
         $form = $request->all();
         $replies->fill($form)->save();
 
-        return redirect(route('home'));
+        return redirect(RouteServiceProvider::thread);
     }
 }

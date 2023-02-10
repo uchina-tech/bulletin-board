@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Thread;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
@@ -39,7 +40,7 @@ class ThreadController extends Controller
         $threads = new Thread;
         $form = $request->all();
         $threads->fill($form)->save();
-        return redirect(route('home'));
+        return redirect(RouteServiceProvider::thread);
     }
 
     public function destroy($id)
@@ -48,16 +49,7 @@ class ThreadController extends Controller
         $thread = Thread::find($id)->delete();
 
 
-        return redirect(route('home'));
-    }
-
-    public function search(Request $request)
-    {
-        $search_message = '%' . addcslashes($request->search_message, '%_\\') . '%';
-
-        $threads = Thread::where('message', 'LIKE', $search_message)->orderBy('created_at', 'desc')->Paginate(5);
-
-        return view('bbs.index', compact('threads'));
+        return redirect(RouteServiceProvider::thread);
     }
 
     public function content(Request $request)
