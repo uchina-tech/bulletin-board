@@ -21,16 +21,10 @@ Route::get('/', function () {
 });
 
 
-//Route::redirect('/', '/thread')->name('home');
-
-Route::resource('thread', ThreadController::class)->only([
-    'index', 'store', 'destroy'
-]);
-
-Route::resource('/reply', ReplyController::class)->only([
-    'store'
-]);
-
+Route::resource('/thread', ThreadController::class);
+Route::get('/content/{thread}', 'App\Http\Controllers\ThreadController@content')->name('content');
+Route::get('/reply/{thread}', 'App\Http\Controllers\ReplyController@store')->name('store');
+Route::get('/reply{reply}', 'App\Http\Controllers\ReplyController@destroy')->name('destroy');
 
 Auth::routes();
 

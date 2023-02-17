@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Reply;
 use App\Models\Thread;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Str;
@@ -28,19 +28,18 @@ class ThreadController extends Controller
             Cookie::queue(Cookie::forever('bbs-app_identifier', $user['identifier']));
         }
 
-        $threads = Thread::orderBy('created_at', 'desc')->Paginate(5);
+        $threads = Thread::orderBy('created_at', 'desc')->paginate(5);
 
         return view('bbs/index', compact('threads', 'user'));
     }
 
     public function store(Request $request)
     {
-        Cookie::queue(Cookie::forever('bbs-app_name', $request->user_name));
-
         $threads = new Thread;
         $form = $request->all();
         $threads->fill($form)->save();
-        return redirect(RouteServiceProvider::thread);
+
+        return redirect(route('thread.index'));
     }
 
     public function destroy($id)
@@ -49,10 +48,10 @@ class ThreadController extends Controller
         $thread = Thread::find($id)->delete();
 
 
-        return redirect(RouteServiceProvider::thread);
+        return redirect(route('thread.index'));
     }
 
-    public function content(Request $request)
+    public function content($thread)
     {
         $user = [
             'name' => Cookie::get('bbs-app_name'),
@@ -70,13 +69,14 @@ class ThreadController extends Controller
             Cookie::queue(Cookie::forever('bbs-app_identifier', $user['identifier']));
         }
 
-        $threads = Thread::orderBy('created_at', 'desc')->Paginate(5);
-//        dd($request);
+        $threads = Thread::find($thread);
+
+        $replies = Reply::get();
 
         return view('bbs/content', [
             'threads' => $threads,
             'user' => $user,
-//            'replies' => $replies
+            'replies' => $replies
         ]);
     }
 }

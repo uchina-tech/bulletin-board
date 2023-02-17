@@ -68,43 +68,26 @@
         </form>
     </div>
     <p class="mt-5">{{ $threads->links() }}</p>
-
-    @foreach ($threads as $thread)
-        <div class="bg-white rounded-md mt-1 mb-5 p-3">
-            <div>
-                <p class="mb-2 text-xs">{{$thread->created_at}} ＠{{$thread->user_name}}</p>
-                <p class="mb-2 text-xl font-bold">{{$thread->message_title}}</p>
-                <p class="mb-2 m-w-max whitespace-pre-line">{{$thread->message}}</p>
-            </div>
-            <div class="flex mt-5">
-                <form class="flex flex-auto" action="{{route('reply.store')}}" method="POST">
-                    @csrf
-                    <input type="hidden" name="thread_id" value={{$thread->id}}>
-                    <input class="border rounded px-2 w-2/5 md:w-4/12 text-sm md:text-base" type="text" name="user_name" placeholder="UserName" value="{{$user['name']}}" required>
-                    <input class="border rounded px-2 ml-2 w-3/5 md:w-10/12 text-sm md:text-base" type="text" name="message" placeholder="ReplyMessage" required>
-                    <input class="px-2 py-1 ml-2 rounded bg-green-600 text-white font-bold link-hover cursor-pointer" type="submit" value="返信">
-                </form>
-                @if ($thread->user_identifier == $user['identifier'])
-                    <form action="{{route('thread.destroy', ['thread'=>$thread->id])}}" method="post">
-                        @csrf
-                        @method('DELETE')
-                        <input class="px-2 py-1 ml-2 rounded bg-red-500 text-white font-bold link-hover cursor-pointer" type="submit" value="削除" onclick="return Check()">
-                    </form>
-                @endif
-            </div>
-            <hr class="mt-2 m-auto">
-            <div class="flex justify-end">
-                <div class="w-11/12">
-                    @foreach ($thread->replies as $reply)
-                        <div>
-                            <p class="mt-2 text-xs">{{$reply->created_at}} ＠{{$reply->user_name}}</p>
-                            <p class="my-2 text-sm">{{$reply->message}}</p>
-                        </div>
-                    @endforeach
+        @foreach ($threads as $thread)
+        <a href="{{ url('content', ['thread'=>$thread->id]) }}">
+            <div class="bg-white rounded-md mt-1 mb-5 p-3">
+                <div>
+                    <p class="mb-2 text-xs">{{$thread->created_at}} ＠{{$thread->user_name}}</p>
+                    <p class="mb-2 text-xl font-bold">{{$thread->message_title}}</p>
+                    <p class="mb-2 m-w-max whitespace-pre-line">{{$thread->message}}</p>
+                </div>
+                <div class="flex mt-5">
+                    @if ($thread->user_identifier == $user['identifier'])
+                        <form action="{{route('thread.destroy', ['thread'=>$thread->id])}}" method="post">
+                            @csrf
+                            @method('DELETE')
+                            <input class="px-2 py-1 ml-2 rounded bg-red-500 text-white font-bold link-hover cursor-pointer" type="submit" value="削除" onclick="return Check()">
+                        </form>
+                    @endif
                 </div>
             </div>
-        </div>
-    @endforeach
+        </a>
+        @endforeach
     <p class="my-5">{{ $threads->links() }}</p>
 </div>
 
